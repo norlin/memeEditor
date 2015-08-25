@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="center" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="BOTTOM" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ds3-Kb-2ss">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="center" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="BOTTOM" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ds3-Kb-2ss">
                                 <rect key="frame" x="16" y="444" width="288" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="hH2-bN-fa1"/>
@@ -28,7 +28,7 @@
                                     <outlet property="delegate" destination="vXZ-lx-hvc" id="68W-da-rTm"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="center" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="TOP" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NUo-nQ-CJN">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="center" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="TOP" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NUo-nQ-CJN">
                                 <rect key="frame" x="16" y="60" width="288" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="adn-3M-U3L"/>
@@ -52,7 +52,7 @@
                                     </barButtonItem>
                                     <barButtonItem systemItem="camera" id="ZOe-PQ-wfS"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="dJ6-mp-FlE"/>
-                                    <barButtonItem systemItem="done" id="nZd-1f-C7h">
+                                    <barButtonItem systemItem="action" id="nZd-1f-C7h">
                                         <connections>
                                             <action selector="shareMeme:" destination="vXZ-lx-hvc" id="35m-w1-fhS"/>
                                         </connections>

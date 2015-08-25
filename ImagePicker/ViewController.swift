@@ -13,8 +13,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         NSStrokeColorAttributeName: UIColor.blackColor(),
         NSForegroundColorAttributeName: UIColor.whiteColor(),
         NSFontAttributeName : UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
-        NSStrokeWidthAttributeName: 3.0
+        NSStrokeWidthAttributeName: -3.0
     ]
+    let topDefaultText = "TOP"
+    let bottomDefaultText = "BOTTOM"
     
     var meme: Meme?
     var memesList: [Meme] = []
@@ -37,12 +39,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         // send image view to back since sometimes it goes to front by itself
-        self.view.sendSubviewToBack(image)
+        view.sendSubviewToBack(image)
 
         // check capture & share button states
         captureButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
         updateShareButton()
+        
+        // Set defaul texts
+        topText.text = topDefaultText
+        bottomText.text = bottomDefaultText
 
         subscribeToKeyboardNotifications()
     }
@@ -50,32 +57,31 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        self.unsubscribeFromKeyboardNotifications()
+        unsubscribeFromKeyboardNotifications()
     }
 
     @IBAction func pickImage(sender: AnyObject) {
         let picker = UIImagePickerController()
         picker.delegate = self
         picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-        self.presentViewController(picker, animated: true, completion: nil)
+        presentViewController(picker, animated: true, completion: nil)
     }
     
     @IBAction func captureImage(sender: UIButton) {
         let picker = UIImagePickerController()
         picker.delegate = self
         picker.sourceType = UIImagePickerControllerSourceType.Camera
-        self.presentViewController(picker, animated: true, completion: nil)
+        presentViewController(picker, animated: true, completion: nil)
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         
-        println(info)
         if let img = info[UIImagePickerControllerOriginalImage] as? UIImage {
             image.image = img
             makeMeme()
         }
         
-        self.dismissViewControllerAnimated(true, completion: nil)
+        dismissViewControllerAnimated(true, completion: nil)
     }
     
     func textChange(notification: NSNotification){
@@ -83,35 +89,35 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        dismissViewControllerAnimated(true, completion: nil)
     }
     
     func makeMeme(){
         // create meme only if we have an image
         if let image = self.image.image {
-            self.navigationController?.navigationBar.hidden = true
+            navigationController?.navigationBar.hidden = true
             toolbar.hidden = true
             
             let top = topText.text
             let bottom = bottomText.text
             
-            self.meme = Meme(top: top, bottom: bottom, image: image, view: self.view)
+            meme = Meme(top: top, bottom: bottom, image: image, view: view)
             updateShareButton()
             
             toolbar.hidden = false
-            self.navigationController?.navigationBar.hidden = false
+            navigationController?.navigationBar.hidden = false
         }
     }
     
     func updateShareButton(){
-        shareButton.enabled = self.meme != nil
+        shareButton.enabled = meme != nil
     }
     
     @IBAction func shareMeme(sender: AnyObject) {
-        if let image = self.meme?.memedImage {
+        if let image = meme?.memedImage {
             let sharing = UIActivityViewController(activityItems: [image], applicationActivities: nil)
             sharing.completionWithItemsHandler = saveMeme
-            self.presentViewController(sharing, animated: true, completion: nil)
+            presentViewController(sharing, animated: true, completion: nil)
         }
     }
     
@@ -122,7 +128,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         // if meme shared successfully save it to the list
         if let meme = self.meme {
-            self.memesList.append(meme)
+            memesList.append(meme)
             self.meme = nil
         }
         updateShareButton()
@@ -138,11 +144,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func keyboardWillShow(notification: NSNotification){
-        self.view.frame.origin.y -= getKeyboardHeight(notification)
+        if bottomText.isFirstResponder() {
+            view.frame.origin.y = -getKeyboardHeight(notification)
+        }
     }
     
     func keyboardWillHide(notification: NSNotification){
-        self.view.frame.origin.y = 0
+        view.frame.origin.y = 0
     }
     
     func subscribeToKeyboardNotifications() {
@@ -156,9 +164,28 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         NSNotificationCenter.defaultCenter().removeObserver(self, name:UIKeyboardWillHideNotification, object: nil)
     }
     
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        if ((textField == bottomText && textField.text == bottomDefaultText) || (textField == topText && textField.text == topDefaultText)) {
+            textField.text = ""
+        }
+        return true
+    }
+    
+    func textFieldDidEndEditing(textField: UITextField) {
+        if (textField.text.isEmpty) {
+            if (textField == bottomText) {
+                textField.text = bottomDefaultText
+            }
+            
+            if (textField == topText) {
+                textField.text = topDefaultText
+            }
+        }
+    }
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        self.view.endEditing(true)
-        return false
+        view.endEditing(true)
+        return true
     }
 }
 

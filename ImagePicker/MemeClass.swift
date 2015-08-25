@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-class Meme {
+struct Meme {
     var topText: String
     var bottomText: String
     var image: UIImage
@@ -16,18 +16,18 @@ class Meme {
     var view: UIView
     
     init (top: String, bottom: String, image: UIImage, view: UIView) {
-        self.topText = top
-        self.bottomText = bottom
+        topText = top
+        bottomText = bottom
         self.image = image
         self.view = view
-        self.memedImage = self.processImage()
+        memedImage = processImage()
     }
     
     private func processImage() -> UIImage {
         // make a screenshot;
         // BTW, is it really a good way to combine text + image???
-        UIGraphicsBeginImageContext(self.view.frame.size)
-        self.view.drawViewHierarchyInRect(self.view.frame, afterScreenUpdates: true)
+        UIGraphicsBeginImageContext(view.frame.size)
+        view.drawViewHierarchyInRect(view.frame, afterScreenUpdates: true)
         let memedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()       
 
